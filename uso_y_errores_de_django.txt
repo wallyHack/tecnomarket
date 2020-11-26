@@ -1,0 +1,326 @@
+
+
+##############################################################################################
+COSAS A TOMAR EN CUENTA DJANGO V3
+
+- extensiones para comprobar sintaxis en django(van en virtualenv)
+pip install pylint
+pip install pylint-django -> Esta se configura así:
+Archivo -> prefencias -> configuración 
+buscar en la pantalla izquierda: pylintArgs
+click en esta opción: "python.linting.pylintArgs[]":[]
+
+editar esto -> "python.linting.pylintArgs[]":[] así:
+"python.linting.pylintArgs[]":[
+    --errors.only  nota: agregar esto sin commillas, ni coma
+    --load-plugins nota: agregar esto sin commillas, ni coma
+    pylint_django   nota: agregar esto sin commillas
+]
+
+- extension en visual studio code para autocompletar código >> django
+djaneiro
+
+ 1.- Agregar la app creada al proyecto en settings.py
+Solución: polls.apps.PollsListConfic >> En este caso la app es polls
+INSTALLED_APPS = [
+	'todo_list.apps.TodoListConfig',
+]
+
+ 1.5.- Incluir la urls de la app en el proyecto principal
+Solución: Creamos un nuevo archivo llamado urls.py dentro de la aplicación
+app_name = "posts"
+urlpatterns = [
+    path('', views.home, name='home'), # vistas basadas en funciones    
+]
+
+Y luego incluimos las urls de este archivo en el proyecto principal
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('posts/', include('posts.urls')), #incluimos las urls de la app posts
+]
+
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+
+2.- Agregar esta ruta en TEMPLATES>DIR para que se reconozcan las plantillas en settings.py
+Solución: Crear la estructura de carpetas correcta en la app polls
+polls/templates/polls/base.html
+
+Agregar esto en settings.py
+TEMPLATES = [ 
+	{
+		'DIRS': [os.path.join(BASE_DIR, 'templates')],	
+	},
+]
+
+CONFIGURANDO ARCHIVOS ESTATICOS(es parecido a los templates)
+ 3.- Agregar la estructura de carpetas(static) correcta para que se reconozcan los estilos
+Solución:  Crear la estructura de carpetas correcta de static >> polls es la app (Nota: los archivos static son archivos css, javascript e imagenes)
+polls/static/polls/style.css
+polls/static/polls/css
+polls/static/polls/img
+polls/static/polls/js
+
+Agregar estas lineas en los templates html(En la base.html):
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+
+Estas rutas son para todo lo que involucra css, imagenes, javascript, etc.
+<link href="{% static 'core/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'core/vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'core/css/clean-blog.min.css' %}" rel="stylesheet">
+<header class="masthead" style="background-image: url('{% static 'core/img/home-bg.jpg' %}')">
+<script src="{% static core/vendor/jquery/jquery.min.js %}"></script>
+<script src="{% static core/vendor/bootstrap/js/bootstrap.bundle.min.js %}"></script>
+<script src="{% static core/js/clean-blog.min.js %}"></script>
+
+Y en settings.py agregamos esto:
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+y poner esto en url.py
++ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) +  static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+ 
+ 4.- Al renderizar las vistas a los templates siempre poner el nombre de la app primero; y generar su propio contexto
+return render(request, 'polls/home.html', {})
+
+ 5.- Al usar enlaces siempre ponerlos así: Primero el nombre de la app y luego la vista
+<li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+
+ 7.- Al heredar de una template siempre ponerlo asi: 
+polls/templates/polls/base.html >> según esta estructura
+{% extends 'polls/base.html' %}
+
+ 8.- Al redireccionar a una vista o página se hace así:
+return redirect('todo_list:home')
+
+ 9.- Diferencias entre render y redirect
+return render(request, 'polls/home.html', {})
+return redirect('todo_list:home')
+
+ 10.- Agregando bootstrap al proyecto
+ Solo copiar la plantilla de ejemplo
+
+ 11.- Consultas a la DB
+python manaye.py shell
+p = Post("Mi gato Garfierd", contenido="Historieta", timestamp=timezone.now()) -> Creamos un registro nuevo
+p.save()
+
+queryset = Post.objects.all() -> Consultar todos los registros de la tabla
+post = Posts.objects.get(pk=4) -> Consulta de un registro especifico
+Posts.objects.filter(titulo="Mi gato garfield") -> Filtramos los registros por titulo
+
+ 12.- Confirmar si un usuario esta logeado(Nota: El usuario inicio sesión)
+if request.user.is_authenticated:
+ 
+ 13.- Usando urls dinámicas -> el método trabaja con el parámetro que recibe de la url
+path('<int:post_id>/', views.post_detail, name='post_detail'),
+
+def post_detail(request, post_id=None):
+    post = get_object_or_404(Post, pk=post_id)
+
+ 14.- Agregando formularios a los modelos
+- Tenemos que crear un archivo nuevo dentro de la app llamado forms.py (Aqui se crea el formulario y se indica los campos que va tener)
+- Creo la vista del formulario en la que lo creo y lo valido; para despues renderizarlo a una plantilla html ej. post_list.html
+- Las formas de renderizas el formulario a la plantilla html son: 
+{{ form.as_table }}
+{{ form.as_p }}
+{{ form.as_ul }}
+
+ 15.- AL usar formularios siempre agregar esta etiqueta: {% csrf_token %} >>por seguridad
+   <h1>Post Form</h1>
+   <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Crear Post">
+   </form>
+
+ 16.- Al editar(Actualizar) un registro primero consultar el registro que quiero editar, luego crear el formulario y le paso como parametro una instancia del obejeto consultado anteriormente
+post = get_object_or_404(Post, pk=post_id)
+if request.method == 'POST':
+        form = PostForm(request.POST or None, instance=post)        
+        if form.is_valid():
+            form.save()  
+
+ 17.- Mostrando mensajes con django
+from django.contrib import messages -> importamos esta línea
+
+messages.success(request, 'Tu post ha sido creado correctamente JAJA...')
+
+código de la vista
+ {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-warning alert-dismissable" role=alert>
+                <button class="close" data-dismiss="alert">
+                    <small><sup>x</sup></small>                
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
+ {% endif %}
+
+ 18.- Vistas basadas en funciones
+path('create/', views.post_create, name='post_create'), # vistas basadas en funciones    
+path('<int:post_id>/', views.post_detail, name='post_detail'),
+path('list/', views.post_list, name='post_list'),
+path('update/<int:post_id>/', views.post_update, name='post_update'),
+path('delete/<int:post_id>/', views.post_delete, name='post_delete'),
+
+ 19.- Vistas basadas en clases
+path('', views.IndexView.as_view(), name='index'),
+path('<int:pk>/', views.DetailView.as_view(), name='detail'),
+path('<int:pk>/results/', views.ResultsView.as_view(), name='results'),
+
+NOTA:
+ 20.- Usando la etiqueta {% block content %} {% endblock content %}
+Todas las partes dinámicas de la página van en etiquetas block
+
+21.- verbose_name = '' -> agrega un nombre global
+
+------------------------------------------------------------------
+22.-  CONFIGURACIÓN PARA LA SUBIDA DE ARCHIVOS MULTIMEDIA POR PARTE DE UN USUARIO
+- poner el atributo upload_to = "proyectos", en el campo imagen -> donde se guardan las imagenes
+- crear una carpeta llamada "media" en la raiz del proyecto
+- configurar los ficheros media en (settings.py), poner esto:
+# media files
+MEDIA_URL = '/media/'                -> donde el servidor de django busca los archivos
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")  -> ruta interna donde tiene que encontrarlos
+
+23.- ------------------------------------------------------------------
+
+ARCHIVOS ESTÁTICOS
+se configuran los ficheros estáticos(imagenes, js, css):
+app/static/app/css
+app/static/app/img
+app/css/app/js
+
+- se agrega esto en settings.py
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+agregar en base.html -> ser cuidadoso y ver todo lo que involucra estaticos
+{% load static %}
+<link href="{% static 'core/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'core/vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'core/css/clean-blog.min.css' %}" rel="stylesheet">
+
+<!-- Bootstrap y Javascripts -->
+<script src="{% static 'core/vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'core/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'core/js/clean-blog.min.js' %}"></script>
+------------------------------------------------------------------
+
+ARCHIVOS DE TEMPLATES
+- se configuran las plantillas:
+app/templates/app/base.html
+app/templates/app/home.html
+app/template/app/about-me.html
+
+se agrega esto en settings.py
+'DIRS': [os.path.join(BASE_DIR, 'templates')],	
+
+-------------------------------------------------------------------
+
+link de como cargar imagenes y archivos en django
+https://simpleisbetterthancomplex.com/tutorial/2016/08/01/how-to-upload-files-with-django.html
+
+ARCHIVOS MEDIA
+- se configuran los ficheros multimedia(archivos que sube el usuario, como imagenes o pdf)
+- poner el atributo upload_to = "proyectos", en el campo imagen -> donde se guardan las imagenes
+- crear una carpeta llamada "media" en la raiz del proyecto
+- configurar los ficheros media en (settings.py), poner esto:
+# media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+poner esto en url.py -> del proyecto general y no en la app
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+NOTA: LAS IMAGENES A SUBIR DEBEN DE TENER LA EXTENCIÓN CORRECTA
+ej. basura.jpg reposteria.png imajen.jpeg --> correcto
+ej. basura  reposteria  imagen   -> incorrecto
+
+24.- NOTA: Al modificar un modelo, agregando nuevos campos poner null=True y blank=True al nuevo campo,
+porque ya hay instancias creadas y estas se afectarian tambien.(TENER CUIDADO AQUI)
+
+##############################################################################################
+
+
+*** Errores Django v3.0 ***
+Solución a errores oythoncircle.com
+
+- TemplateDoesNotExist at /todo_list/home/
+Error during template rendering
+{% extends "base.html" %}
+
+Solución:
+Agregar el nombre de la aplicacion a la ruta
+{% extends "todo_list/base.html" %}
+
+https://www.pythoncircle.com/post/660/solving-django-error-templatedoesnotexist-at-app_name/
+ver:
+1.- nombre correcto de la aplicación
+2.- nombre correcto de la plantilla
+3.- Esta agregada la app al proyecto >> Installed Apps
+4.- Esta ha estructura de directorios correcta >> app_name/templates/app_name/home.html
+5.- agregar la ruta de plantillas >> 'DIRS': [os.path.join(BASE_DIR, 'templates')], en Settings.py
+
+- Error al renderizar datos a una página html
+
+Solución:
+Poner el nombre de la aplicacion en la ruta
+return render(request, 'app_name/home.html', {})
+
+- AttributeError: type object 'List' has no attribute 'object'
+Solución: Poner List.objects.all
+
+- NoReverseMatch at /todo_list/home/. 'todo_list/home' is not a valid view function or pattern name
+Solución:
+
+- TypeError: all() got an unexpected keyword argument 'pk'
+item = List.objects.all(pk=list_id)
+Solución: Poner
+item = List.objects.get(pk=list_id)
+
+
+- NoReverseMatch at /todo_list/cross_off/19
+Reverse for 'home' not found. 'home' is not a valid view function or pattern name
+
+- ImportError: Couldn't import Django
+Solución:
+Debemos activar primero el entorno virtual y luego correr la app
+
+- Djando admin v3.0 no inicia sesión, no hay errores, se sale del servidor solo
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+
+Solución:
+
+- TypeError: context must be a dict rather than ModelFormMetaclass
+Solución: Cambiar el contexto a un dicccionario y luego renderizar este a la template
+
+- UnboundLocalError: local variable 'context' referenced before assignment
+Solución: Crear la variable context fuera de la condición para que sus limites no sean locales y se reconozcan al momento de renderizar
+
+- error con sql3:  No such table: main.auth_user__old
+solución: aplicar las migraciones para crear la base de datos
+python mangae.py migrate
+
+- error: vulnerabilidades de seguridad en el proyecto al usar django2.0
+Solución: actualizar la versión de django en mi virtualenv
+pip install --upgrade django
