@@ -286,6 +286,31 @@ se agrega esto en settings.py
     </ul>
 </nav>
 
+---------------------------------------------------------------------------------------
+PERSONALIZACION ADMIN SITE
+25.- configuramos el admin site con el plugin django-admin-interface
+
+- URL de instalación: https://github.com/fabiocaccamo/django-admin-interface
+- lo instalamos
+pip install django-admin-interface
+
+- modificamos el admin.py
+class ProductoAdmin(admin.ModelAdmin):
+    list_display = ['nombre', 'precio', 'descripcion', 'nuevo', 'marca', 'fecha_de_fabricacion']
+    list_editable = ['nuevo']  # columna editable
+    search_fields = ['nombre'] # busqueda por columna   
+    list_filter = ['marca', 'nuevo', 'fecha_de_fabricacion'] # filtro por marca y nuevo
+    list_per_page = 2 # paginación(número de articulos por página)
+
+admin.site.register(Producto, ProductoAdmin)
+admin.site.register(Marca)
+
+- cambiamos el nombre de la app en al admin site
+-> en apps.py agregamos sta linea:
+verbose_name = 'tecnomarket'
+
+---------------------------------------------------------------------------------------
+
 ##############################################################################################
 ##############################################################################################
 
