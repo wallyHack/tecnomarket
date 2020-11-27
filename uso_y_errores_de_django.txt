@@ -193,12 +193,49 @@ Todas las partes dinámicas de la página van en etiquetas block
 
 ------------------------------------------------------------------
 22.-  CONFIGURACIÓN PARA LA SUBIDA DE ARCHIVOS MULTIMEDIA POR PARTE DE UN USUARIO
+- instalar la librería pillow
 - poner el atributo upload_to = "proyectos", en el campo imagen -> donde se guardan las imagenes
 - crear una carpeta llamada "media" en la raiz del proyecto
 - configurar los ficheros media en (settings.py), poner esto:
 # media files
 MEDIA_URL = '/media/'                -> donde el servidor de django busca los archivos
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")  -> ruta interna donde tiene que encontrarlos
+
+- nos dirigimos al archivo urls.py del proyecto principal y agregammos estas lineas
+from django.conf import settings
+from django.conf.urls.static import static
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+- ahora en models.py, agregamos el atributo de la imagen
+image = models.ImageField(upload_to="productos", null=True)
+
+-------------------------------------------------------------------
+
+SUBUDA DE IMAGENES
+link de como cargar imagenes y archivos en django
+https://simpleisbetterthancomplex.com/tutorial/2016/08/01/how-to-upload-files-with-django.html
+
+ARCHIVOS MEDIA
+- se configuran los ficheros multimedia(archivos que sube el usuario, como imagenes o pdf)
+- poner el atributo upload_to = "proyectos", en el campo imagen -> donde se guardan las imagenes
+- crear una carpeta llamada "media" en la raiz del proyecto
+- configurar los ficheros media en (settings.py), poner esto:
+# media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+poner esto en url.py -> del proyecto general y no en la app
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+NOTA: LAS IMAGENES A SUBIR DEBEN DE TENER LA EXTENCIÓN CORRECTA
+ej. basura.jpg reposteria.png imajen.jpeg --> correcto
+ej. basura  reposteria  imagen   -> incorrecto
+
+NOTA: Al modificar un modelo, agregando nuevos campos poner null=True y blank=True al nuevo campo,
+porque ya hay instancias creadas y estas se afectarian tambien.(TENER CUIDADO AQUI)
 
 23.- ------------------------------------------------------------------
 
@@ -235,32 +272,8 @@ app/template/app/about-me.html
 se agrega esto en settings.py
 'DIRS': [os.path.join(BASE_DIR, 'templates')],	
 
--------------------------------------------------------------------
 
-link de como cargar imagenes y archivos en django
-https://simpleisbetterthancomplex.com/tutorial/2016/08/01/how-to-upload-files-with-django.html
-
-ARCHIVOS MEDIA
-- se configuran los ficheros multimedia(archivos que sube el usuario, como imagenes o pdf)
-- poner el atributo upload_to = "proyectos", en el campo imagen -> donde se guardan las imagenes
-- crear una carpeta llamada "media" en la raiz del proyecto
-- configurar los ficheros media en (settings.py), poner esto:
-# media files
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-poner esto en url.py -> del proyecto general y no en la app
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-NOTA: LAS IMAGENES A SUBIR DEBEN DE TENER LA EXTENCIÓN CORRECTA
-ej. basura.jpg reposteria.png imajen.jpeg --> correcto
-ej. basura  reposteria  imagen   -> incorrecto
-
-24.- NOTA: Al modificar un modelo, agregando nuevos campos poner null=True y blank=True al nuevo campo,
-porque ya hay instancias creadas y estas se afectarian tambien.(TENER CUIDADO AQUI)
-
-25.- url del menu
+24.- url del menu
 <nav id="nav">
     <ul>
         <li>

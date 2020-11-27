@@ -118,7 +118,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+# media static
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+# media files
+MEDIA_URL = '/media/'                         # donde el servidor de django busca los archivos
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")  # ruta interna donde tiene que encontrarlos
