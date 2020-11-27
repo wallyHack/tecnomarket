@@ -81,6 +81,7 @@ Estas rutas son para todo lo que involucra css, imagenes, javascript, etc.
 <link href="{% static 'core/vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
 <link href="{% static 'core/css/clean-blog.min.css' %}" rel="stylesheet">
 <header class="masthead" style="background-image: url('{% static 'core/img/home-bg.jpg' %}')">
+<img src="{% static 'app/img/s9.jpeg' %}" alt="imagen producto">
 <script src="{% static core/vendor/jquery/jquery.min.js %}"></script>
 <script src="{% static core/vendor/bootstrap/js/bootstrap.bundle.min.js %}"></script>
 <script src="{% static core/js/clean-blog.min.js %}"></script>
@@ -259,6 +260,20 @@ ej. basura  reposteria  imagen   -> incorrecto
 24.- NOTA: Al modificar un modelo, agregando nuevos campos poner null=True y blank=True al nuevo campo,
 porque ya hay instancias creadas y estas se afectarian tambien.(TENER CUIDADO AQUI)
 
+25.- url del menu
+<nav id="nav">
+    <ul>
+        <li>
+            <a href="{% url 'app:home' %}"> Inicio </a>
+        </li>
+        <li>
+            <a href="{% url 'app:contacto' %}">Contacto</a>
+        </li>
+            <li><a href="{% url 'app:galeria' %}">Galería</a></li>
+    </ul>
+</nav>
+
+##############################################################################################
 ##############################################################################################
 
 
@@ -324,3 +339,6 @@ python mangae.py migrate
 - error: vulnerabilidades de seguridad en el proyecto al usar django2.0
 Solución: actualizar la versión de django en mi virtualenv
 pip install --upgrade django
+
+- error: 'app' is not a registered namespace
+Solución: agregar app_name = 'app' en urls.py de la aplicación
