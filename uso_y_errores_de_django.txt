@@ -213,7 +213,7 @@ image = models.ImageField(upload_to="productos", null=True)
 
 -------------------------------------------------------------------
 
-SUBUDA DE IMAGENES
+SUBIDA DE IMAGENES
 link de como cargar imagenes y archivos en django
 https://simpleisbetterthancomplex.com/tutorial/2016/08/01/how-to-upload-files-with-django.html
 
@@ -313,6 +313,64 @@ verbose_name = 'tecnomarket'
 
 26.- accedemos al contenido de una variable en templates
 {{ nombre }}
+
+{% for p in lista_de_productos %}
+    <div class="producto">
+        <div class="contenedor_producto">
+                                
+            {% if p.image %} <!-- si existe imagen -->
+                <img src="{{ p.image.url }}" alt="imagen producto">
+            {% endif %}
+
+            <div class="detalle">
+                <h5> {{ p.marca  | capfirst }} </h5>
+                <h2> {{ p.nombre | title }} </h2>
+                <h3> {{ p.precio | intcomma }} </h3>
+            </div>                                    
+        </div>
+    </div>
+{% endfor %}
+
+27.- USO DE FORMULARIOS
+
+- agregamos el archivo forms.py; y vinculamos el modelo y el formulario
+from django import forms
+from .models import Contacto
+
+class ContactoForm(forms.ModelForm):
+    class Meta:
+        model = Contacto
+        # fields = ['nombre', 'correo', 'telefono', 'tipo_de_consulta', 'mensaje', 'avisos']
+        fields = '__all__'
+
+- modificamos la vista
+def contacto(request):
+    # creamos una instancia con el formulario vacio
+    data = {
+        'form': ContactoForm()
+    }
+
+    if request.method == 'POST':
+        formulario = ContactoForm(data=request.POST) # formularrio con datos
+        if formulario.is_valid():
+            formulario.save()
+            data['mensaje'] = 'Contacto guardado'
+        else:
+            data['form'] = formulario
+
+    return render(request, 'app/contacto.html', data)
+
+- luego el template
+    <form action="" class="formulario_contacto" method="POST">
+        
+        {% csrf_token %}
+        {{form}}
+        
+        <br>
+        <button type="submit" id="btnEnviar" class="button">Enviar</button>        
+
+    </form>
+    {{mensaje}}
 
 ##############################################################################################
 ##############################################################################################
