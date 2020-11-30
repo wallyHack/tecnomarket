@@ -3,43 +3,39 @@
 {% load static %}
 
 {% block title %}
-    Formulario de Contacto
+    Formulario para Agregar Producto
 {% endblock title %}
 
 {% block contenido %}
 
-    {% load crispy_forms_tags %}    
+    {% load crispy_forms_tags %}
     <br>
     <div class="row">
         <div class="col-12 col-md-6 offset-md-3">
             <div class="card">
                 <div class="card-body">
-                    <h2>Contactanos!</h2>
-                    <hr>
-        
-                    <form action="" class="" method="POST">
-                
+                    <h2>Agregar Producto</h2>
+                    <br>
+
+                    <form action="" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {{form | crispy}}
+                        {{ form | crispy }}
                         <hr>
 
                         <br>
                         <div class="d-flex justify-content-end">
                             <input type="reset" value="Cancelar" class="btn btn-secondary">
                             &nbsp;
-                            <button type="submit" id="btnEnviar" class="btn btn-primary">Enviar</button>        
+                            <button type="submit" value="Guardar" id="btnGuardar" class="btn btn-primary">Guardar</button>
                         </div>
-                
                     </form>
-                    {{mensaje}}
-                </div>
+                    {{mensaje}}                    
+                </div>            
             </div>
         </div>
     </div>
 
-    <table id="tablacontactos">
-        
-    </table>
-
     <br>
 {% endblock contenido %}
+    
+    

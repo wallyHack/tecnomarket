@@ -7,7 +7,7 @@ class ProductoAdmin(admin.ModelAdmin):
     list_editable = ['nuevo']  # columna editable
     search_fields = ['nombre'] # busqueda por columna   
     list_filter = ['marca', 'nuevo', 'fecha_de_fabricacion'] # filtro por marca y nuevo
-    list_per_page = 2 # paginación(número de articulos por página)
+    # list_per_page = 2 # paginación(número de articulos por página)
 
 admin.site.register(Producto, ProductoAdmin)
 

@@ -141,7 +141,7 @@ def post_detail(request, post_id=None):
 {{ form.as_p }}
 {{ form.as_ul }}
 
- 15.- AL usar formularios siempre agregar esta etiqueta: {% csrf_token %} >>por seguridad
+ 15.- Al usar formularios siempre agregar esta etiqueta: {% csrf_token %} >>por seguridad
    <h1>Post Form</h1>
    <form action="" method="POST">
         {% csrf_token %}
@@ -418,7 +418,42 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
         </div>
     </div>
 
+29.- CRUD PARA EL MODELO PRODUCTO, FUERA DEL ADMIN
+29-1.- ALTAS EN UN MODELO Y CONFIGURACION PARA SUBIR ARCHIVOS(Imagenes o PDF)
 
+- creamos el formulario apartir del modelo
+class ProductoForm(forms.ModelForm):
+    image = forms.FileField(required=False)
+    class Meta:
+        model = Producto        
+        fields = '__all__'
+
+        widgets = {
+            "fecha_de_fabricacion": forms.SelectDateWidget()
+        }
+
+- despues creamos la vista incluyendo request.POST or None y request.FILES asi:
+def agregar_producto(request):  
+    # instancia de formulario vacío
+    data = {
+        'form': ProductoForm()
+    }
+
+    if request.method == 'POST':
+        formulario = ProductoForm(data=request.POST or None, files=request.FILES)
+        if formulario.is_valid():
+            formulario.save()
+            data['mensaje'] = "Producto guardado correctamente"
+        else:
+            data['form'] = formulario
+    
+    return render(request, 'app/producto/agregar.html', data)
+
+- luego creamos el template donde lo renderizamos y el formulario lleva el atributo enctype="multipart/form-data"
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form | crispy }}                       
+</form>
 
 ##############################################################################################
 ##############################################################################################

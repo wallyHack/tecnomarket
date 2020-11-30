@@ -1,6 +1,6 @@
 
 from django import forms
-from .models import Contacto
+from .models import Contacto, Producto
 
 class ContactoForm(forms.ModelForm):
 
@@ -12,4 +12,12 @@ class ContactoForm(forms.ModelForm):
         # fields = ['nombre', 'correo', 'telefono', 'tipo_de_consulta', 'mensaje', 'avisos']
         fields = '__all__'
 
-        
+class ProductoForm(forms.ModelForm):
+    image = forms.FileField(required=False)
+    class Meta:
+        model = Producto        
+        fields = '__all__'
+
+        widgets = {
+            "fecha_de_fabricacion": forms.SelectDateWidget()
+        }
