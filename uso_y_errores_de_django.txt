@@ -455,6 +455,8 @@ def agregar_producto(request):
     {{ form | crispy }}                       
 </form>
 
+30.- OPERACIÓN LISTAR
+
 ##############################################################################################
 ##############################################################################################
 
@@ -524,3 +526,7 @@ pip install --upgrade django
 
 - error: 'app' is not a registered namespace
 Solución: agregar app_name = 'app' en urls.py de la aplicación
+
+- error: TypeError: context must be a dict rather than QuerySet
+Solución: se debe mandar un diccionario al renderizar a la plantilla
+return render(request, 'app/producto/listar.html', {'productos': productos}) 
