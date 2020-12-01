@@ -457,6 +457,45 @@ def agregar_producto(request):
 
 30.- OPERACIÓN LISTAR
 
+- primero creamos su vista
+def lista_de_productos(request):
+    productos = Producto.objects.all()
+    data = {
+        'productos': productos
+    }
+    return render(request, 'app/producto/listar.html', data)
+
+- despues su url
+ path('lista-productos/', views.lista_de_productos, name='lista_de_productos'),
+
+ - luego su template
+
+ 31.- OPERACIÓN EDITAR EN EL MODELO PRODUCTO
+
+ - primero creamos su vista, que es parecida a la de agregar
+ def modificar_producto(request, id):    
+    # primero buscamos el producto
+    producto = get_object_or_404(Producto, pk=id)
+    data = {
+        'form': ProductoForm(instance=producto) # llenamos el form con el producto buscado
+    }
+
+    if request.method == 'POST':
+        # guardamos los datos del form
+        formulario = ProductoForm(data=request.POST or None, instance=producto, files=request.FILES)
+        if formulario.is_valid():
+            formulario.save() 
+            return redirect('app:lista_de_productos')
+        else:
+            data['form'] = formulario
+
+    return render(request, 'app/producto/modificar.html', data)
+
+- despues su url
+path('modificar-producto/<int:id>/', views.modificar_producto, name='modificar_producto')
+
+- y al ultimo su template
+
 ##############################################################################################
 ##############################################################################################
 
