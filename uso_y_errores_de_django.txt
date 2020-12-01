@@ -419,6 +419,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
     </div>
 
 29.- CRUD PARA EL MODELO PRODUCTO, FUERA DEL ADMIN
+nota: Al crear un modelo se crea su id por defecto
+
 29-1.- ALTAS EN UN MODELO Y CONFIGURACION PARA SUBIR ARCHIVOS(Imagenes o PDF)
 
 - creamos el formulario apartir del modelo
@@ -471,6 +473,7 @@ def lista_de_productos(request):
  - luego su template
 
  31.- OPERACIÓN EDITAR EN EL MODELO PRODUCTO
+ nota: Al crear un modelo se crea su id por defecto
 
  - primero creamos su vista, que es parecida a la de agregar
  def modificar_producto(request, id):    
@@ -491,10 +494,35 @@ def lista_de_productos(request):
 
     return render(request, 'app/producto/modificar.html', data)
 
-- despues su url
+- despues especificamos su url
 path('modificar-producto/<int:id>/', views.modificar_producto, name='modificar_producto')
 
-- y al ultimo su template
+- y al ultimo creamos su template para acceder a esta vista atraves de un boton y no por medio de URL
+<th>
+    <a class="btn btn-info btn-sm" href="{% url 'app:modificar_producto' p.id %}">Editar</a>    
+</th>     
+
+32.- OPERACIÓN ELIMINAR DEL MODELO PRODUCTO
+nota: Al crear un modelo se crea su id por defecto
+
+- primero creamos la vista
+def eliminar_producto(request, id):
+    # primero buscamos el producto
+    producto = get_object_or_404(Producto, pk=id)
+    producto.delete()
+    return redirect('app:lista_de_productos')
+
+- despues su url
+ path('eliminar-producto/<int:id>/', views.eliminar_producto, name="eliminar_producto"),
+
+- modificamos el template para acceder a esta vista atraves de un boton y no por medio de URL
+<th>
+    <a class="btn btn-info btn-sm" href="{% url 'app:modificar_producto' p.id %}">Editar</a>
+    <a class="btn btn-danger btn-sm" href="{% url 'app:eliminar_producto' p.id %}">Eliminar</a>
+</th>  
+
+33.- al usar enlaces siempre usar la etiqueta {% url %}
+<a href="{% url 'app:agregar_producto' %}">Agregar Producto</a>
 
 ##############################################################################################
 ##############################################################################################

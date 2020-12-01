@@ -66,3 +66,10 @@ def modificar_producto(request, id):
             data['form'] = formulario
 
     return render(request, 'app/producto/modificar.html', data)
+
+def eliminar_producto(request, id):
+    # primero buscamos el producto
+    producto = get_object_or_404(Producto, pk=id)
+    producto.delete()
+    return redirect('app:lista_de_productos')
+    
