@@ -6,6 +6,30 @@
     Lista de productos
 {% endblock title %}
 
+{% block js %}  
+
+    <script>
+        function eliminarProducto(id){
+            swal({
+                title: "Estas seguro?",
+                text: "esta acción no se puede regresar?",
+                icon: "warning", 
+                buttons: ["No, Cancelar", "Si, Eliminar"],
+                dangerMode: true,                                
+            })
+            .then((willDeleted) =>{
+                if(willDeleted){
+                    window.location.href = "/eliminar-producto/"+id+"/"
+                }else{
+                    swal("La operación fue cancelada por el usuario");
+                }
+            });
+        }
+    </script>
+
+{% endblock js %}
+    
+
 {% block contenido %}     
     {% load humanize %}
     <br>
@@ -45,7 +69,7 @@
                             <td> {{p.descripcion}} </td>
                             <th>
                                 <a class="btn btn-info btn-sm" href="{% url 'app:modificar_producto' p.id %}">Editar</a>
-                                <a class="btn btn-danger btn-sm" href="{% url 'app:eliminar_producto' p.id %}">Eliminar</a>
+                                <a class="btn btn-danger btn-sm" href="#" onclick="eliminarProducto( {{p.id}} )">Eliminar</a>
                             </th>                            
                                                         
                         </tr>

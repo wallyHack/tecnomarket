@@ -54,7 +54,7 @@
 
     </header>
 
-    <div id="contenido">
+    <div id="contenido">                    
         {% block contenido %}
 
         {% endblock %}
@@ -76,6 +76,22 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>    
     <script src="{% static 'app/js/menu.js' %}"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    {% if messages %}
+            
+        {% for m in messages %}
+            <script>
+                swal({
+                    title: "Felicidades!",
+                    text: "{{ m }}",
+                    icon: "success",
+                });
+            </script>
+        {% endfor %}
+        
+    {% endif %}
+
 
     {% block js %}
         

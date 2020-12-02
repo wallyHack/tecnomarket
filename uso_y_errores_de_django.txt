@@ -3,6 +3,9 @@
 ##############################################################################################
 COSAS A TOMAR EN CUENTA DJANGO V3
 
+- vistas basadas en clases 
+http://ccbv.co.uk/
+
 - extensiones para comprobar sintaxis en django(van en virtualenv)
 pip install pylint
 pip install pylint-django -> Esta se configura así:
@@ -523,6 +526,65 @@ def eliminar_producto(request, id):
 
 33.- al usar enlaces siempre usar la etiqueta {% url %}
 <a href="{% url 'app:agregar_producto' %}">Agregar Producto</a>
+
+34.- USANDO EL FRAMEWORK DE MESSAGES
+
+- agregamos esta linea en settings.py
+MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
+
+- y ponemos esta en las vistas
+from django.contrib import messages
+messages.success(request, 'Agregado correctamente.')
+
+- al ultimo modificamos el template
+{% if messages %}
+    {% for m in messages %}
+        {{ m }}
+    {% endfor %}                
+{% endif %}
+            
+34.- PERSONALIZANDO MENSAJES CON SWEETALERT
+
+- agregamos su CDN al base.html
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+- despues mostramos los mensajes usando django templates y javascript
+{% if messages %}           
+    {% for m in messages %}
+        <script>
+            swal({
+                title: "Felicidades!",
+                text: "{{ m }}",
+                icon: "success",
+            });
+        </script>
+    {% endfor %}        
+{% endif %}
+
+- personalizamos el boton eliminar con una confirmación
+
+<a class="btn btn-danger btn-sm" href="#" onclick="eliminarProducto( {{p.id}} )">Eliminar</a>
+
+{% block js %}
+<script>
+    function eliminarProducto(id){
+        swal({
+            title: "Estas seguro?",
+            text: "esta acción no se puede regresar?",
+            icon: "warning", 
+            buttons: ["No, Cancelar", "Si, Eliminar"],
+            dangerMode: true,                                
+        })
+        .then((willDeleted) =>{
+            if(willDeleted){
+                window.location.href = "/eliminar-producto/"+id+"/"
+            }else{
+                swal("La operación fue cancelada por el usuario");
+            }
+        });
+    }
+</script>
+{% endblock js %}
 
 ##############################################################################################
 ##############################################################################################
