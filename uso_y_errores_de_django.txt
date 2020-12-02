@@ -309,7 +309,7 @@ admin.site.register(Producto, ProductoAdmin)
 admin.site.register(Marca)
 
 - cambiamos el nombre de la app en al admin site
--> en apps.py agregamos sta linea:
+-> en apps.py agregamos esta linea:
 verbose_name = 'tecnomarket'
 
 ---------------------------------------------------------------------------------------
@@ -527,7 +527,7 @@ def eliminar_producto(request, id):
 33.- al usar enlaces siempre usar la etiqueta {% url %}
 <a href="{% url 'app:agregar_producto' %}">Agregar Producto</a>
 
-34.- USANDO EL FRAMEWORK DE MESSAGES
+34.- USANDO EL FRAMEWORK DE MESSAGES de Django
 
 - agregamos esta linea en settings.py
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
@@ -543,7 +543,8 @@ messages.success(request, 'Agregado correctamente.')
     {% endfor %}                
 {% endif %}
             
-34.- PERSONALIZANDO MENSAJES CON SWEETALERT
+35.- PERSONALIZANDO MENSAJES CON SWEETALERT
+https://sweetalert.js.org/guides/#getting-started
 
 - agregamos su CDN al base.html
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -585,6 +586,49 @@ messages.success(request, 'Agregado correctamente.')
     }
 </script>
 {% endblock js %}
+
+36.- PAGINACIÓN
+
+- esta es nuestra vista
+def lista_de_productos(request):
+    productos = Producto.objects.all()
+    page = request.GET.get('page', 1)
+    
+    try:
+        paginator = Paginator(productos, 2) # mostramos 2 productos por página
+        productos = paginator.page(page)
+    except:
+        raise Http404
+
+    data = {
+        'page_obj': productos,     
+        'paginator': paginator   
+    }
+
+    return render(request, 'app/producto/listar.html', data)
+
+- despues creamos un nuevo archivo llamado paginator.html(El de la documentación)
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+- y lo incluimos donde queremos que vaya(En este caso en el template listar productos, al final)
+{% include 'app/paginator.html' %}
+
 
 ##############################################################################################
 ##############################################################################################

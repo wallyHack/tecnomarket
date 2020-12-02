@@ -53,7 +53,7 @@
                 </thead>
                 <tbody>
                     
-                    {% for p in productos %}
+                    {% for p in page_obj %}
                         <tr>
                             <td> {{p.nombre}} </td>
                             <td> {{p.precio}} </td>
@@ -77,6 +77,9 @@
                         
                 </tbody>
             </table>
+
+            {% include 'app/paginator.html' %}
+
         </div>        
     </div>
     <br>
