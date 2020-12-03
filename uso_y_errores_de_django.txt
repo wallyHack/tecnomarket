@@ -629,6 +629,58 @@ def lista_de_productos(request):
 - y lo incluimos donde queremos que vaya(En este caso en el template listar productos, al final)
 {% include 'app/paginator.html' %}
 
+37.- FORMULARIO DE LOGIN, FUERA DEL ADMIN SITE
+https://developer.mozilla.org/es/docs/Learn/Server-side/Django/Authentication
+
+- creamos la carpeta registration en templates, y dentro creamos el archivo login.html
+<body>
+    {% load crispy_forms_tags %}
+    <div class="container">
+        <br>
+        <br>
+        <br>        
+        <div class="row">
+            <div class="col-12 col-md-6 offset-md-3">
+                 <div class="card">
+                     <div class="card-body">
+                        <h2>Ingresa tus credenciales</h2>
+                        <hr>
+
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            {{ form | crispy}}
+
+                            <a href="{% url 'app:home' %}">ir al home</a>
+                            <input type="submit" value="ingresar" class="btn btn-success float-right">
+                        </form>
+                     </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+- en settings.py agregamos esto:
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+- despues en las urls del proyecto principal, agregamos las urls del sistema de autenticación
+path('accounts/', include('django.contrib.auth.urls')),
+
+- en base.html hacemos uso del sistema de autenticación
+{% if user.is_authenticated %}
+    <li>
+        <a href="{% url 'logout' %}">cerrar sesión</a>
+    </li>
+
+    <li>
+        <a href="#">@{{ user.username }}</a>
+    </li>
+{% else %}
+    <li>
+        <a href="{% url 'login' %}">iniciar sesión</a>
+    </li>
+{% endif %}
 
 ##############################################################################################
 ##############################################################################################
