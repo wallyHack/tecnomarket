@@ -682,6 +682,83 @@ path('accounts/', include('django.contrib.auth.urls')),
     </li>
 {% endif %}
 
+38.- REGISTRO DE USUARIOS
+
+- primero creamos la vista en views.py
+def registro(request):
+    # contexto que se renderiza al template
+    data = {
+        'form': CustomUserCreationForm()
+    }
+
+    if request.method == 'POST':
+        formulario = CustomUserCreationForm(data=request.POST)
+        if formulario.is_valid():
+            formulario.save()
+
+            # una vez creado el usuario, lo autenticamos y logeamos
+            user = authenticate(username=formulario.cleaned_data["username"], password = formulario.cleaned_data["password1"])
+            login(request, user)
+            messages.success(request, "Te has registrado correctamente")
+            # redireccionamos al home
+            return redirect("app:home")
+
+        data['form'] = formulario
+
+    return render(request, 'registration/registro.html', data)
+
+- luego la url en urls.py
+path('registro/', views.registro, name='registro'),
+
+- despues el formulario, apartir del modelo User, en ar archivo forms.py 
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
+class CustomUserCreationForm(UserCreationForm):
+    
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+
+- y al ultimo el template donde renderizamos el formulario de registro
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuarios</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+</head>
+<body>
+    {% load crispy_forms_tags %}
+    <div class="container">
+        <br>
+        <br>
+        <br>        
+        <div class="row">
+            <div class="col-12 col-md-6 offset-md-3">
+                 <div class="card">
+                     <div class="card-body">
+                        <h2>Registro de Usuarios</h2>
+                        <hr>
+
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            {{ form | crispy}}
+
+                            <a href="{% url 'app:home' %}">ir al home</a>
+                            <br>
+                            <a href="{% url 'login' %}">Iniciar sesión</a>                            
+                            <input type="submit" value="registrar" class="btn btn-success float-right">
+                        </form>
+                     </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
 ##############################################################################################
 ##############################################################################################
 
