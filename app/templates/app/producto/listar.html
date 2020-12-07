@@ -68,8 +68,15 @@
                             </td>
                             <td> {{p.descripcion}} </td>
                             <th>
-                                <a class="btn btn-info btn-sm" href="{% url 'app:modificar_producto' p.id %}">Editar</a>
-                                <a class="btn btn-danger btn-sm" href="#" onclick="eliminarProducto( {{p.id}} )">Eliminar</a>
+                                
+                                {% if perms.app.change_producto %}
+                                    <a class="btn btn-info btn-sm" href="{% url 'app:modificar_producto' p.id %}">Editar</a>
+                                {% endif %}
+                                                                    
+                                {% if perms.app.delete_producto %}
+                                    <a class="btn btn-danger btn-sm" href="#" onclick="eliminarProducto( {{p.id}} )">Eliminar</a>
+                                {% endif %}
+                                    
                             </th>                            
                                                         
                         </tr>

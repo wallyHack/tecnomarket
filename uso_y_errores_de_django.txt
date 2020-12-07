@@ -759,6 +759,57 @@ class CustomUserCreationForm(UserCreationForm):
     </div>
 </body>
 </html>
+
+- AGREGANDO AUTORIZACION A LOS USUARIOS
+@login_required => el usuario necesita estar logeado(No importa los permisos que tenga)
+@permission_required =>  el usuario necesita un permiso en especifico
+
+NOTA: lo básico es ocultar los enlaces
+{% if perms.app.add_producto %}
+    <li>
+        <a href="{% url 'app:agregar_producto' %}">Agregar Producto</a>
+    </li>
+{% endif %}
+                                                               
+{% if perms.app.view_producto %}
+    <li>
+        <a href="{% url 'app:lista_de_productos' %}">Listar Productos</a>
+    </li>
+{% endif %} 
+
+{% if perms.app.change_producto %}
+    <a class="btn btn-info btn-sm" href="{% url 'app:modificar_producto' p.id %}">Editar</a>
+{% endif %}
+                                                                    
+{% if perms.app.delete_producto %}
+    <a class="btn btn-danger btn-sm" href="#" onclick="eliminarProducto( {{p.id}} )">Eliminar</a>
+{% endif %}
+
+from django.contrib.auth.decorators import login_required, permission_required
+
+- archivo views.py
+
+- se requiere estar logeado
+@login_required
+def home(request):
+
+@login_required
+def galeria(request):
+    return render(request, 'app/galeria.html')
+
+- se requiere un permiso especifico
+@permission_required('app.add_producto')
+def agregar_producto(request):  
+
+@permission_required('app.view_producto')
+def lista_de_productos(request):
+
+@permission_required('app.change_producto')
+def modificar_producto(request, id): 
+
+@permission_required('app.delete_producto')
+def eliminar_producto(request, id):
+
 ##############################################################################################
 ##############################################################################################
 
