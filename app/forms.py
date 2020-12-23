@@ -3,6 +3,8 @@ from django import forms
 from .models import Contacto, Producto
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .validators import MaxSizeFileValidator
+from django.core.exceptions import ValidationError
 
 class ContactoForm(forms.ModelForm):
 
@@ -15,7 +17,21 @@ class ContactoForm(forms.ModelForm):
         fields = '__all__'
 
 class ProductoForm(forms.ModelForm):
-    image = forms.FileField(required=False)
+    
+    image = forms.FileField(required=False, validators=[MaxSizeFileValidator(max_file_size=1)]) # validamos que el campo imagen no sea requerido
+    nombre = forms.CharField(min_length=3, max_length=10) 
+    precio = forms.DecimalField(min_value=1)   
+   
+    # validación personalizada para que no se repita el nombre
+    def clean_nombre(self):
+        nombre = self.cleaned_data['nombre']
+        existe = Producto.objects.filter(nombre__iexact=nombre).exists()
+
+        if existe:
+            raise ValidationError("Este nombre ya existe")
+
+        return nombre
+
     class Meta:
         model = Producto        
         fields = '__all__'

@@ -58,7 +58,7 @@ def lista_de_productos(request):
     page = request.GET.get('page', 1)
     
     try:
-        paginator = Paginator(productos, 2) 
+        paginator = Paginator(productos, 3) 
         productos = paginator.page(page)
     except:
         raise Http404

@@ -810,6 +810,46 @@ def modificar_producto(request, id):
 @permission_required('app.delete_producto')
 def eliminar_producto(request, id):
 
+-- VALIDACIONES PERSONALIZADAS EN LOS FORMULARIOS
+from .validators import MaxSizeFileValidator
+from django.core.exceptions import ValidationError
+
+=> validaciones normales(van en forms.py)
+nombre = forms.CharField(min_length=3, max_length=10) 
+precio = forms.DecimalField(min_value=1) 
+
+=> validación perzonalizada
+- creamos un archivo llamado validators.py
+from django.core.exceptions import ValidationError
+
+# validamos el tamaño de subida para una imagen
+class MaxSizeFileValidator:
+
+    def __init__(self, max_file_size=5):
+        self.max_file_size = max_file_size
+
+    def __call__(self, value): # valor recibido de la caja del formulario
+        size  = value.size
+        max_size = self.max_file_size * 1048576 # 1 MB = 1048576 bytes
+
+        if size > max_size:
+            raise ValidationError(f"El tamaño maximo del archivo debe de ser de {self.max_file_size}MB")
+
+        return value
+
+- aplicamos la validación(en forms.py)
+image = forms.FileField(required=False, validators=[MaxSizeFileValidator(max_file_size=1)])
+
+=> # validación personalizada para que no se repita el nombre(va en forms.py, ProductoForm)
+def clean_nombre(self):
+    nombre = self.cleaned_data['nombre']
+    existe = Producto.objects.filter(nombre__iexact=nombre).exists()
+
+    if existe:
+        raise ValidationError("Este nombre ya existe")
+
+    return nombre
+
 ##############################################################################################
 ##############################################################################################
 
