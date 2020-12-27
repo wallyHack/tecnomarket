@@ -6,8 +6,30 @@ from django.core.paginator import Paginator
 from django.http import Http404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required, permission_required
+from rest_framework import viewsets
+from .serializers import ProductoSerializer, MarcaSerializer
 
 # Create your views here.
+class MarcaViewset(viewsets.ModelViewSet):
+    queryset = Marca.objects.all()
+    serializer_class = MarcaSerializer
+
+# ViewSets define el comportamiento de la vista
+class ProductoViewset(viewsets.ModelViewSet):
+    queryset = Producto.objects.all() # extraemos los datos de la DB
+    serializer_class = ProductoSerializer # convertimos los datos a json con la clase serializer
+
+    # extraemos un elemento específico(Producto) atravéz de la URL
+    def get_queryset(self):
+        productos = Producto.objects.all()
+
+        nombre = self.request.GET.get('nombre') # variable de la url
+
+        if nombre: # si existe un producto con ese nombre lo mostramos
+            productos = productos.filter(nombre__contains=nombre) # obtenemos las coincidencias(Es como like en consultas sql)
+
+        return productos
+
 @login_required
 def home(request):
     lista_de_productos = Producto.objects.all()

@@ -1,4 +1,5 @@
 
+link curso: https://www.youtube.com/watch?v=M1D4nd6Hihc
 
 ##############################################################################################
 COSAS A TOMAR EN CUENTA DJANGO V3
@@ -216,7 +217,7 @@ image = models.ImageField(upload_to="productos", null=True)
 
 -------------------------------------------------------------------
 
-SUBIDA DE IMAGENES
+==> SUBIDA DE IMAGENES
 link de como cargar imagenes y archivos en django
 https://simpleisbetterthancomplex.com/tutorial/2016/08/01/how-to-upload-files-with-django.html
 
@@ -289,8 +290,9 @@ se agrega esto en settings.py
     </ul>
 </nav>
 
----------------------------------------------------------------------------------------
-PERSONALIZACION ADMIN SITE
+******************************************************************************************
+
+==> PERSONALIZACION ADMIN SITE
 25.- configuramos el admin site con el plugin django-admin-interface
 
 - URL de instalación: https://github.com/fabiocaccamo/django-admin-interface
@@ -312,8 +314,6 @@ admin.site.register(Marca)
 -> en apps.py agregamos esta linea:
 verbose_name = 'tecnomarket'
 
----------------------------------------------------------------------------------------
-
 26.- accedemos al contenido de una variable en templates
 {{ nombre }}
 
@@ -334,7 +334,7 @@ verbose_name = 'tecnomarket'
     </div>
 {% endfor %}
 
-27.- USO DE FORMULARIOS
+===> USO DE FORMULARIOS EN DJANGO
 
 - agregamos el archivo forms.py; y vinculamos el modelo y el formulario
 from django import forms
@@ -375,7 +375,7 @@ def contacto(request):
     </form>
     {{mensaje}}
 
-28.- INTEGRANDO BOOTSTRAP, ATRAVEZ DEL PLUGIN => crispy
+===> INTEGRANDO BOOTSTRAP, ATRAVEZ DEL PLUGIN => crispy
 
 - estilos para elementos del formulario
 # agregando estilos a elementos por separado
@@ -424,7 +424,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 29.- CRUD PARA EL MODELO PRODUCTO, FUERA DEL ADMIN
 nota: Al crear un modelo se crea su id por defecto
 
-29-1.- ALTAS EN UN MODELO Y CONFIGURACION PARA SUBIR ARCHIVOS(Imagenes o PDF)
+===> ALTAS EN UN MODELO Y CONFIGURACION PARA SUBIR ARCHIVOS(Imagenes o PDF)
 
 - creamos el formulario apartir del modelo
 class ProductoForm(forms.ModelForm):
@@ -460,7 +460,7 @@ def agregar_producto(request):
     {{ form | crispy }}                       
 </form>
 
-30.- OPERACIÓN LISTAR
+===> OPERACIÓN LISTAR
 
 - primero creamos su vista
 def lista_de_productos(request):
@@ -475,7 +475,7 @@ def lista_de_productos(request):
 
  - luego su template
 
- 31.- OPERACIÓN EDITAR EN EL MODELO PRODUCTO
+===> OPERACIÓN EDITAR EN EL MODELO PRODUCTO
  nota: Al crear un modelo se crea su id por defecto
 
  - primero creamos su vista, que es parecida a la de agregar
@@ -505,7 +505,7 @@ path('modificar-producto/<int:id>/', views.modificar_producto, name='modificar_p
     <a class="btn btn-info btn-sm" href="{% url 'app:modificar_producto' p.id %}">Editar</a>    
 </th>     
 
-32.- OPERACIÓN ELIMINAR DEL MODELO PRODUCTO
+===> OPERACIÓN ELIMINAR DEL MODELO PRODUCTO
 nota: Al crear un modelo se crea su id por defecto
 
 - primero creamos la vista
@@ -527,12 +527,12 @@ def eliminar_producto(request, id):
 33.- al usar enlaces siempre usar la etiqueta {% url %}
 <a href="{% url 'app:agregar_producto' %}">Agregar Producto</a>
 
-34.- USANDO EL FRAMEWORK DE MESSAGES de Django
+==> USANDO EL FRAMEWORK DE MESSAGES de Django
 
 - agregamos esta linea en settings.py
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
-- y ponemos esta en las vistas
+- y ponemos esto en las vistas
 from django.contrib import messages
 messages.success(request, 'Agregado correctamente.')
 
@@ -543,7 +543,7 @@ messages.success(request, 'Agregado correctamente.')
     {% endfor %}                
 {% endif %}
             
-35.- PERSONALIZANDO MENSAJES CON SWEETALERT
+===> PERSONALIZANDO MENSAJES CON SWEETALERT
 https://sweetalert.js.org/guides/#getting-started
 
 - agregamos su CDN al base.html
@@ -587,7 +587,7 @@ https://sweetalert.js.org/guides/#getting-started
 </script>
 {% endblock js %}
 
-36.- PAGINACIÓN
+==> PAGINACIÓN
 
 - esta es nuestra vista
 def lista_de_productos(request):
@@ -629,7 +629,7 @@ def lista_de_productos(request):
 - y lo incluimos donde queremos que vaya(En este caso en el template listar productos, al final)
 {% include 'app/paginator.html' %}
 
-37.- FORMULARIO DE LOGIN, FUERA DEL ADMIN SITE
+===> FORMULARIO DE LOGIN, FUERA DEL ADMIN SITE
 https://developer.mozilla.org/es/docs/Learn/Server-side/Django/Authentication
 
 - creamos la carpeta registration en templates, y dentro creamos el archivo login.html
@@ -682,7 +682,7 @@ path('accounts/', include('django.contrib.auth.urls')),
     </li>
 {% endif %}
 
-38.- REGISTRO DE USUARIOS
+===> REGISTRO DE USUARIOS
 
 - primero creamos la vista en views.py
 def registro(request):
@@ -760,7 +760,7 @@ class CustomUserCreationForm(UserCreationForm):
 </body>
 </html>
 
-- AGREGANDO AUTORIZACION A LOS USUARIOS
+===> AGREGANDO AUTORIZACION A LOS USUARIOS
 @login_required => el usuario necesita estar logeado(No importa los permisos que tenga)
 @permission_required =>  el usuario necesita un permiso en especifico
 
@@ -810,7 +810,7 @@ def modificar_producto(request, id):
 @permission_required('app.delete_producto')
 def eliminar_producto(request, id):
 
--- VALIDACIONES PERSONALIZADAS EN LOS FORMULARIOS
+===> VALIDACIONES PERSONALIZADAS EN LOS FORMULARIOS
 from .validators import MaxSizeFileValidator
 from django.core.exceptions import ValidationError
 
@@ -849,6 +849,52 @@ def clean_nombre(self):
         raise ValidationError("Este nombre ya existe")
 
     return nombre
+
+===> USO DE DJANGO REST FRAMEWORK
+- instalamos los siguientes modulos
+pip install djangorestframework
+pip install markdown       # Markdown support for the browsable API.
+pip install django-filter  # Filtering support
+
+- agregamos rest_framework a INSTALLED_APPS
+INSTALLED_APPS = [
+    ...
+    'rest_framework',
+]
+
+- creammos las urls
+urlpatterns = [
+    ...
+    path('api-auth/', include('rest_framework.urls'))
+]
+
+- creamos el archivo serializers.py para definir la representación de la API
+from .models import Producto, Marca
+from rest_framework import serializers
+from .validators import MaxSizeFileValidator
+from django.core.exceptions import ValidationError
+
+class ProductoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Producto
+        fields = '__all__'
+
+- creamos las vistas para definir el comportamiento
+# ViewSets define el comportamiento de la vista
+class ProductoViewset(viewsets.ModelViewSet):
+    queryset = Producto.objects.all() # extraemos los datos de la DB
+    serializer_class = ProductoSerializer # convertimos los datos a json con la clase serializer
+
+- definimos las rutas en el archivo urls.py
+router = routers.DefaultRouter() # ruta base
+router.register('producto', views.ProductoViewset)
+router.register('marca', views.MarcaViewet)
+
+# ejemplo: localhost:8000/api/producto
+
+urlpatterns = [
+    path('api/', include(router.urls)),
+]
 
 ##############################################################################################
 ##############################################################################################

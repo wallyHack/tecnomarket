@@ -1,5 +1,13 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
+from rest_framework import routers, viewsets
+
+# definimos las rutas
+router = routers.DefaultRouter() # ruta base
+router.register('producto', views.ProductoViewset)
+router.register('marca', views.MarcaViewset)
+
+# ejemplo: localhost:8000/api/producto
 
 app_name = 'app'
 urlpatterns = [
@@ -11,4 +19,5 @@ urlpatterns = [
     path('modificar-producto/<int:id>/', views.modificar_producto, name='modificar_producto'),
     path('eliminar-producto/<int:id>/', views.eliminar_producto, name="eliminar_producto"),
     path('registro/', views.registro, name='registro'),
+    path('api/', include(router.urls)),
 ]
