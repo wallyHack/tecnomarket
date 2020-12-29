@@ -19,5 +19,6 @@ urlpatterns = [
     path('modificar-producto/<int:id>/', views.modificar_producto, name='modificar_producto'),
     path('eliminar-producto/<int:id>/', views.eliminar_producto, name="eliminar_producto"),
     path('registro/', views.registro, name='registro'),
+    path('error-facebook/', views.error_facebook, name="error_facebook"),
     path('api/', include(router.urls)),
 ]
