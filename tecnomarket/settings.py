@@ -21,7 +21,7 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# habilitamos la creación automatica de llaves primarias en todos los modelos
+# omitimos la creación automatica de llaves primarias
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # vinculación de autencitación con facebook
