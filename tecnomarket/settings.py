@@ -35,9 +35,9 @@ SOCIAL_AUTH_FACEBOOK_SECRET = "9f10c610694c41fe94ac56302828adad"
 SECRET_KEY = '9k_kxkvore0w@01mcde9-1v@na!kv!93&mm$p=p-=2!bret+j-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1','sampledomain.com']
 
 SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 LOGIN_ERROR_URL = '/error-facebook/'
@@ -66,6 +66,7 @@ X_FRAME_OPTIONS='SAMEORIGIN' # only if django version >= 3.0
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
