@@ -119,11 +119,14 @@ WSGI_APPLICATION = 'tecnomarket.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd7ut5906a901cs',
+        'HOST': 'ec2-52-200-155-213.compute-1.amazonaws.com',
+        'USER': 'mzbpkgiamimvnu',
+        'PORT': 5432,
+        'PASSWORD': 'ccfbd177de142b294131819492b089249499e96dcf7adddea67ff32fc03fb5c3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
