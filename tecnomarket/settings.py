@@ -37,7 +37,7 @@ SECRET_KEY = '9k_kxkvore0w@01mcde9-1v@na!kv!93&mm$p=p-=2!bret+j-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1','https://tecnomarket-mhl.herokuapp.com/']
+ALLOWED_HOSTS = ['https://tecnomarket-mhl.herokuapp.com/']
 
 SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 LOGIN_ERROR_URL = '/error-facebook/'
