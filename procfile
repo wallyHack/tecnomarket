@@ -1,0 +1,1 @@
+web: gunicorn tecnomarket.wsgi --log-file -

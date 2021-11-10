@@ -35,9 +35,9 @@ SOCIAL_AUTH_FACEBOOK_SECRET = "9f10c610694c41fe94ac56302828adad"
 SECRET_KEY = '9k_kxkvore0w@01mcde9-1v@na!kv!93&mm$p=p-=2!bret+j-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://tecnomarket-mhl.herokuapp.com/']
 
 SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 LOGIN_ERROR_URL = '/error-facebook/'
@@ -66,6 +66,7 @@ X_FRAME_OPTIONS='SAMEORIGIN' # only if django version >= 3.0
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -118,11 +119,14 @@ WSGI_APPLICATION = 'tecnomarket.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd7ut5906a901cs',
+        'HOST': 'ec2-52-200-155-213.compute-1.amazonaws.com',
+        'USER': 'mzbpkgiamimvnu',
+        'PORT': 5432,
+        'PASSWORD': 'ccfbd177de142b294131819492b089249499e96dcf7adddea67ff32fc03fb5c3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
