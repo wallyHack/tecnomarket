@@ -16,6 +16,9 @@ class Producto(models.Model):
     fecha_de_fabricacion = models.DateField()
     image = models.ImageField(upload_to="productos", null=True)
 
+    class Meta:
+        ordering = ['nombre']
+
     def __str__(self):
         return self.nombre 
 
